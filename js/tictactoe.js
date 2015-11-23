@@ -56,12 +56,12 @@ var player = function(name, piece){
   };
 };
 
-var game = function(){
+var game = function(boardSize, nInARow){
   var g = {
-    board: board(3),
+    board: board(boardSize),
     players: [],
     curPlayer: null,
-    nInARow: 3,
+    nInARow: nInARow,
     moveCount: 0,
     addPlayer: function(player){
       this.players.push(player);
@@ -186,7 +186,7 @@ var game = function(){
 // console.log(p1.name, p1.piece);
 // console.log(p2.name, p2.piece);
 
-var g = game();
+var g = game(4, 4);
 g.addPlayer(player('p1', 'x'));
 g.addPlayer(player('p2', 'o'));
 // console.log(g.board.size(), g.players);
