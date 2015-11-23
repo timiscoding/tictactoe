@@ -62,6 +62,7 @@ var game = function(){
     players: [],
     curPlayer: null,
     nInARow: 3,
+    moveCount: 0,
     addPlayer: function(player){
       this.players.push(player);
       if (this.players.length === 1){
@@ -83,8 +84,11 @@ var game = function(){
           var move = this.curPlayer.getMove();
         }while (!this.isValidMove(move));
         this.board.setSquare(move, this.curPlayer.piece);
+        this.moveCount++;
         this.board.show();
-        this.checkState(move);
+        if (this.isGameOver(move)){
+          break;
+        }
         this.curPlayer = this.getNextPlayer();
         console.log(move);
       }
@@ -100,13 +104,19 @@ var game = function(){
         return true;
       }
     },
-    checkState: function(move){
-      if (this.checkColumn(move) === 3 ||
-          this.checkRow(move) === 3 ||
-          this.checkLeftDiag(move) === 3 ||
-          this.checkRightDiag(move) === 3){
+    isGameOver: function(move){
+      var res = false;
+      if (this.checkColumn(move) === this.nInARow ||
+          this.checkRow(move) === this.nInARow ||
+          this.checkLeftDiag(move) === this.nInARow ||
+          this.checkRightDiag(move) === this.nInARow){
         console.log("winner");
+        res = true;
+      }else if (this.moveCount === this.board.size() * this.board.size()){
+        console.log("draw");
+        res = true;
       }
+      return res;
     },
     checkColumn: function(move){
       return this.getMatches(move, "N") + this.getMatches(move, "S") - 1; // move is counted twice
