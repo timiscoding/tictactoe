@@ -84,7 +84,7 @@ var game = function(){
         }while (!this.isValidMove(move));
         this.board.setSquare(move, this.curPlayer.piece);
         this.board.show();
-
+        this.checkState(move);
         this.curPlayer = this.getNextPlayer();
         console.log(move);
       }
@@ -101,35 +101,57 @@ var game = function(){
       }
     },
     checkState: function(move){
-      return checkColumn(move);
-      // checkRow(move);
-      // checkDiag(move);
+      if (this.checkColumn(move) === 3 ||
+          this.checkRow(move) === 3 ||
+          this.checkLeftDiag(move) === 3 ||
+          this.checkRightDiag(move) === 3){
+        console.log("winner");
+      }
     },
     checkColumn: function(move){
-      return checkN(move) + checkS(move);
+      return this.getMatches(move, "N") + this.getMatches(move, "S") - 1; // move is counted twice
+    },
+    checkRow: function(move){
+      return this.getMatches(move, "E") + this.getMatches(move, "W") - 1; // move is counted twice
+    },
+    checkRightDiag: function(move){
+      return this.getMatches(move, "NE") + this.getMatches(move, "SW") - 1; // move is counted twice
+    },
+    checkLeftDiag: function(move){
+      return this.getMatches(move, "NW") + this.getMatches(move, "SE") - 1; // move is counted twice
     },
     getMatches: function(move, dir){
-      if (this.board.getSquare(move) === this.curPlayer.piece){
-        getMatches({y: move.y - 1, x: move.x})
+      // debugger;
+      var square = this.board.getSquare(move);
+      if (square !== this.curPlayer.piece){
+        return 0;
       }
       switch (dir){
         case "N":
+          return 1 + this.getMatches({y: +move.y - 1, x: +move.x}, "N");
           break;
-
-      }
-    }
-    checkN: function(move){
-      var matches = 0;
-      for (var row=move.y; row >= 0; row--){
-        var square = this.board.getSquare({y: row, x: move.x});
-        var target = this.curPlayer.piece;
-        if (square === target){
-          matches++;
-        }else{
+        case "S":
+          return 1 + this.getMatches({y: +move.y + 1, x: +move.x}, "S");
           break;
-        }
+        case "E":
+          return 1 + this.getMatches({y: +move.y, x: +move.x + 1}, "E");
+          break;
+        case "W":
+          return 1 + this.getMatches({y: +move.y, x: +move.x - 1}, "W");
+          break;
+        case "NE":
+          return 1 + this.getMatches({y: +move.y - 1, x: +move.x + 1}, "NE");
+          break;
+        case "SE":
+          return 1 + this.getMatches({y: +move.y + 1, x: +move.x + 1}, "SE");
+          break;
+        case "NW":
+          return 1 + this.getMatches({y: +move.y - 1, x: +move.x - 1}, "NW");
+          break;
+        case "SW":
+          return 1 + this.getMatches({y: +move.y + 1, x: +move.x - 1}, "SW");
+          break;
       }
-      return matches;
     }
   };
   return g;
@@ -160,3 +182,8 @@ g.addPlayer(player('p2', 'o'));
 // console.log(g.board.size(), g.players);
 // console.log(g.board.show());
 g.play();
+// g.board.setSquare({y:0, x:0}, 'x');
+// g.board.setSquare({y:1, x:1}, 'x');
+// g.board.setSquare({y:2, x:2}, 'x');
+// g.board.show();
+// console.log(g.checkLeftDiag({y:0, x:0}));
