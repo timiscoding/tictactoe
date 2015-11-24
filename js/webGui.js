@@ -1,33 +1,36 @@
 console.log("webGui");
 
 var webGui = {
-  actualBoard: null,
+  // actualBoard: null,
   board: function(size){
-    webGui.actualBoard = tictactoe.board(size);
-    var b = tictactoe.board(size); // new board with prototype tictactoe.board
-    b.setSquare = function(move, piece){
-      webGui.actualBoard.setSquare( move, piece ); // Updates the in memory board's grid
-        // tictactoe.board().setSquare(move, piece);
-        // b.setSquare.call(this.prototype, move, piece);  // should call super method
-        $('.row').eq(move.y).find('.col').eq(move.x).text(piece); // Updates the GUI's board's grid to keep them in sync
-    };
-    // create NxN grid
-    for (var i=0; i < size; i++){
-      $("#container").append('<div class="row" y="' + i + '">');
-      for (var j=0; j < size; j++){
-        $(".row").eq(i).append('<div class="col" x="' + j + '">');
+    // webGui.actualBoard = tictactoe.board(size);
+    // var b = tictactoe.board(size); // new board with prototype tictactoe.board
+     // create NxN grid
+      for (var i=0; i < size; i++){
+        $("#container").append('<div class="row" y="' + i + '">');
+        for (var j=0; j < size; j++){
+          $(".row").eq(i).append('<div class="col" x="' + j + '">');
+        }
       }
+      // change width and height of squares proportional to window height
+      $(".row").css("height", "calc(75vh / " + size + ")");
+      $(".col").css({"width": "calc(100% / " + size + ")",
+                    "height": "calc(75vh / " + size + ")",
+                    "line-height": "calc(75vh / " + size + ")"});
+    return {
+      setSquare: function(move, piece){
+        // webGui.actualBoard.setSquare( move, piece ); // Updates the in memory board's grid
+          // tictactoe.board().setSquare(move, piece);
+          // b.setSquare.call(this.prototype, move, piece);  // should call super method
+          $('.row').eq(move.y).find('.col').eq(move.x).text(piece); // Updates the GUI's board's grid to keep them in sync
+      }
+
     }
-    // change width and height of squares proportional to window height
-    $(".row").css("height", "calc(75vh / " + size + ")");
-    $(".col").css({"width": "calc(100% / " + size + ")",
-                  "height": "calc(75vh / " + size + ")",
-                  "line-height": "calc(75vh / " + size + ")"});
-    return b;
+    // return b;
   },
   game: function(boardSize, nInARow){
     var g = tictactoe.game(boardSize, nInARow);
-    webGui.actualBoard = g.board; // associates the GUI board with the in-memory board
+    // webGui.actualBoard = g.board; // associates the GUI board with the in-memory board
     g.play = function(){
       $(".col").on("click", function(){
         var move = {
@@ -37,7 +40,9 @@ var webGui = {
         // console.log(move);
         // debugger;
         if (g.makeMove(move)){
-          webGui.actualBoard.show();
+          g.webBoard.setSquare(move, g.curPlayer.piece);
+          g.board.show();
+          // debugger;
           if (g.isGameOver(move)){
             console.log('game over');
           }else{
@@ -47,7 +52,7 @@ var webGui = {
 
       });
     };
-    g.board = webGui.board(boardSize); // Purely for the DOM, but also creates connections to memory
+    g.webBoard = webGui.board(boardSize); // Purely for the DOM, but also creates connections to memory
     return g;
   }
 };

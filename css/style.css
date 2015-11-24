@@ -15,7 +15,7 @@
   vertical-align: middle;       /* keeps square from moving down when square contains content */
   text-align: center;
   line-height: calc(75vh / 3);  /* vertically center text */
-  font-size: 5em;
+  font-size: 5vh;
 }
 
 #container {
