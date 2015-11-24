@@ -1,0 +1,24 @@
+.row {
+  border: 1px solid black;
+  background-color: red;
+  height: calc(75vh / 3);
+}
+
+.col {
+  display: inline-block;
+  border: 2px solid blue;
+  width: calc(100% / 3);
+  height: calc(75vh / 3);
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  vertical-align: middle;       /* keeps square from moving down when square contains content */
+  text-align: center;
+  line-height: calc(75vh / 3);  /* vertically center text */
+  font-size: 5em;
+}
+
+#container {
+  margin: 0 auto;
+  width: 75vh;
+}
