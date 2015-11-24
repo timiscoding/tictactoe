@@ -81,18 +81,24 @@ var tictactoe = {
         // else
         // change player and loop
         while (true){
-          do{
-            var move = this.curPlayer.getMove();
-          }while (!this.isValidMove(move));
-          this.board.setSquare(move, this.curPlayer.piece);
-          this.moveCount++;
-          this.board.show();
-          if (this.isGameOver(move)){
-            break;
+          var move = this.curPlayer.getMove();
+          if (this.makeMove(move)){
+            this.board.show();
+            if (this.isGameOver(move)){
+              break;
+            }else{
+              this.curPlayer = this.getNextPlayer();
+            }
           }
-          this.curPlayer = this.getNextPlayer();
-          console.log(move);
         }
+      },
+      makeMove: function(move){
+        if (!this.isValidMove(move)){
+          return false;
+        }
+        this.board.setSquare(move, this.curPlayer.piece);
+        this.moveCount++;
+        return true;
       },
       isValidMove: function(move){
         console.log('r:' + move.y + ']c:' + move.x + ']');
@@ -188,7 +194,7 @@ var tictactoe = {
 // console.log(p1.name, p1.piece);
 // console.log(p2.name, p2.piece);
 
-var g = tictactoe.game(4, 4);
+var g = tictactoe.game(3, 3);
 g.addPlayer(tictactoe.player('p1', 'x'));
 g.addPlayer(tictactoe.player('p2', 'o'));
 // console.log(g.board.size(), g.players);
