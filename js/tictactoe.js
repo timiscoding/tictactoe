@@ -24,6 +24,10 @@ var tictactoe = {
         return grid;
       },
       setSquare: function(move, piece){
+        // debugger;
+
+        // Set up the grid if it is necessary
+
         this.grid[move.y][move.x] = piece;
       },
       getSquare: function(move){
@@ -33,6 +37,9 @@ var tictactoe = {
           square = this.grid[move.y][move.x];
         }
         return square;
+      },
+      createBoard: function (size) {
+
       }
     };
     // create an N x N board with empty squares
@@ -194,14 +201,9 @@ var tictactoe = {
 // console.log(p1.name, p1.piece);
 // console.log(p2.name, p2.piece);
 
-var g = tictactoe.game(3, 3);
-g.addPlayer(tictactoe.player('p1', 'x'));
-g.addPlayer(tictactoe.player('p2', 'o'));
+// var g = tictactoe.game(3, 3);
+// g.addPlayer(tictactoe.player('p1', 'x'));
+// g.addPlayer(tictactoe.player('p2', 'o'));
 // console.log(g.board.size(), g.players);
 // console.log(g.board.show());
-g.play();
-// g.board.setSquare({y:0, x:0}, 'x');
-// g.board.setSquare({y:1, x:1}, 'x');
-// g.board.setSquare({y:2, x:2}, 'x');
-// g.board.show();
-// console.log(g.checkLeftDiag({y:0, x:0}));
+// g.play();

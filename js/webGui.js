@@ -1,16 +1,21 @@
 console.log("webGui");
+
 var webGui = {
+  actualBoard: null,
   board: function(size){
-    var b = {
-      setSquare: function(move, piece){
-        $('.row').eq(move.y).find('.col').eq(move.x).text(piece);
-      }
+    webGui.actualBoard = tictactoe.board(size);
+    var b = tictactoe.board(size); // new board with prototype tictactoe.board
+    b.setSquare = function(move, piece){
+      webGui.actualBoard.setSquare( move, piece ); // Updates the in memory board's grid
+        // tictactoe.board().setSquare(move, piece);
+        // b.setSquare.call(this.prototype, move, piece);  // should call super method
+        $('.row').eq(move.y).find('.col').eq(move.x).text(piece); // Updates the GUI's board's grid to keep them in sync
     };
     // create NxN grid
     for (var i=0; i < size; i++){
-      $("#container").append('<div class="row" row="' + i + '">');
+      $("#container").append('<div class="row" y="' + i + '">');
       for (var j=0; j < size; j++){
-        $(".row").eq(i).append('<div class="col">');
+        $(".row").eq(i).append('<div class="col" x="' + j + '">');
       }
     }
     // change width and height of squares proportional to window height
@@ -21,22 +26,29 @@ var webGui = {
     return b;
   },
   game: function(boardSize, nInARow){
-    var g = tictactoe.gam(boardSize, nInARow);
+    var g = tictactoe.game(boardSize, nInARow);
+    webGui.actualBoard = g.board; // associates the GUI board with the in-memory board
     g.play = function(){
       $(".col").on("click", function(){
-          // $(this)
-          if (!this.isValidMove(move)){
-            return;
+        var move = {
+          y: $(this).closest(".row").attr("y"),
+          x: $(this).attr("x")
+        };
+        // console.log(move);
+        // debugger;
+        if (g.makeMove(move)){
+          webGui.actualBoard.show();
+          if (g.isGameOver(move)){
+            console.log('game over');
+          }else{
+            g.curPlayer = g.getNextPlayer();
           }
-          this.board.setSquare(move, this.curPlayer.piece);
-          this.moveCount++;
-          this.board.show();
-          if (this.isGameOver(move)){
-            break;
-          }
-          this.curPlayer = this.getNextPlayer();
+        }
+
       });
     };
+    g.board = webGui.board(boardSize); // Purely for the DOM, but also creates connections to memory
+    return g;
   }
 };
 
@@ -51,7 +63,9 @@ $(document).ready(function(){
     // b.setSquare({y:2, x:0}, 'H');
     // b.setSquare({y:2, x:1}, 'E');
     // b.setSquare({y:2, x:2}, 'R');
-    var g = webGui.game();
+    var g = webGui.game(3, 3);
+    // debugger;
     g.addPlayer(tictactoe.player('p1', 'x'));
     g.addPlayer(tictactoe.player('p2', 'o'));
+    g.play();
 });
