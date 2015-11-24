@@ -24,10 +24,6 @@ var tictactoe = {
         return grid;
       },
       setSquare: function(move, piece){
-        // debugger;
-
-        // Set up the grid if it is necessary
-
         this.grid[move.y][move.x] = piece;
       },
       getSquare: function(move){
@@ -65,7 +61,10 @@ var tictactoe = {
   },
 
   game: function(boardSize, nInARow){
-    var g = {
+    return {
+      PLAY: -1,
+      DRAW: 0,
+      WINNER: 1,
       board: tictactoe.board(boardSize),
       players: [],
       curPlayer: null,
@@ -81,20 +80,20 @@ var tictactoe = {
         return this.players[(this.players.indexOf(this.curPlayer) + 1) % this.players.length];
       },
       play: function(){
-        //
-        // keep getting player move while invalid
-        // update board
-        // if game state is w/l/d, show score
-        // else
-        // change player and loop
         while (true){
           var move = this.curPlayer.getMove();
           if (this.makeMove(move)){
             this.board.show();
-            if (this.isGameOver(move)){
-              break;
-            }else{
+            var gameState = this.gameState(move);
+            if (gameState === this.PLAY){
               this.curPlayer = this.getNextPlayer();
+            }else{
+              if (gameState === this.WINNER){
+                console.log(this.curPlayer.name + " has won");
+              }else{
+                console.log("DRAW");
+              }
+              break;
             }
           }
         }
@@ -108,7 +107,6 @@ var tictactoe = {
         return true;
       },
       isValidMove: function(move){
-        console.log('r:' + move.y + ']c:' + move.x + ']');
         if (move.y >= this.board.size() ||
             move.x >= this.board.size() ||
             this.board.getSquare(move)){
@@ -118,17 +116,17 @@ var tictactoe = {
           return true;
         }
       },
-      isGameOver: function(move){
-        var res = false;
-        if (this.checkColumn(move) === this.nInARow ||
-            this.checkRow(move) === this.nInARow ||
-            this.checkLeftDiag(move) === this.nInARow ||
-            this.checkRightDiag(move) === this.nInARow){
+      gameState: function(move){
+        var res = this.PLAY;
+        if (this.checkColumn(move) >= this.nInARow ||
+            this.checkRow(move) >= this.nInARow ||
+            this.checkLeftDiag(move) >= this.nInARow ||
+            this.checkRightDiag(move) >= this.nInARow){
           console.log("winner");
-          res = true;
+          res = this.WINNER;
         }else if (this.moveCount === this.board.size() * this.board.size()){
           console.log("draw");
-          res = true;
+          res = this.DRAW;
         }
         return res;
       },
@@ -145,7 +143,6 @@ var tictactoe = {
         return this.getMatches(move, "NW") + this.getMatches(move, "SE") - 1; // move is counted twice
       },
       getMatches: function(move, dir){
-        // debugger;
         var square = this.board.getSquare(move);
         if (square !== this.curPlayer.piece){
           return 0;
@@ -178,32 +175,10 @@ var tictactoe = {
         }
       }
     };
-    return g;
   }
 };
-
-// var b = board(3);
-// console.log('empty board');
-// b.show();
-// b.setSquare({y:0, x:0},'x');
-// b.setSquare({y:0, x:1},'x');
-// b.setSquare({y:0, x:2},'x');
-// b.setSquare({y:2, x:0},'x');
-// b.setSquare({y:2, x:1},'o');
-// b.setSquare({y:2, x:2},'x');
-
-// console.log('full board');
-// b.show();
-// console.log(b.getSquare({y:2, x:1}));
-
-// var p1 = player('p1', 'x');
-// var p2 = player('p2', 'o');
-// console.log(p1.name, p1.piece);
-// console.log(p2.name, p2.piece);
 
 // var g = tictactoe.game(3, 3);
 // g.addPlayer(tictactoe.player('p1', 'x'));
 // g.addPlayer(tictactoe.player('p2', 'o'));
-// console.log(g.board.size(), g.players);
-// console.log(g.board.show());
 // g.play();
