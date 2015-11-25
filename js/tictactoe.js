@@ -178,7 +178,7 @@ var tictactoe = {
             break;
         }
       },
-      reset: function(boardSize, nInARow){
+      resetBoard: function(boardSize, nInARow){
         this.board = tictactoe.board(boardSize);
         this.nInARow = nInARow;
         this.curPlayer = this.players[0];

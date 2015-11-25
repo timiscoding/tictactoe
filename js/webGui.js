@@ -20,7 +20,7 @@ var webGui = {
     $("#container").append('<div class="playerBar"');
     return {
       setSquare: function(move, piece){
-          $('.row').eq(move.y).find('.col').eq(move.x).text(piece); // Updates the GUI's board's grid to keep them in sync
+          $('.row').eq(move.y).find('.col').eq(move.x).html(piece); // Updates the GUI's board's grid to keep them in sync
       }
     };
   },
@@ -34,7 +34,7 @@ var webGui = {
         };
         console.log(move);
         if (g.makeMove(move)){
-          g.webBoard.setSquare(move, g.curPlayer.piece);
+          g.webBoard.setSquare(move, g.curPlayer.avatar || g.curPlayer.piece);
           g.board.show();
           var gameState = g.gameState(move);
           if (gameState === g.PLAY){
@@ -56,33 +56,52 @@ var webGui = {
     };
     g.webBoard = webGui.board(boardSize); // Purely for updating the DOM board
     return g;
+  },
+  playerSetup: function(){
+    var p1Name = $('#player1Name').val() || "player 1";
+    var p2Name = $('#player2Name').val() || "player 2";
+    var p1AvatarUrl = $('#player1Avatar').val();
+    var p2AvatarUrl = $('#player2Avatar').val();
+
+    var p1 = tictactoe.player(p1Name, 'x');
+    var p2 = tictactoe.player(p2Name, 'o');
+    if (p1AvatarUrl){
+      p1.avatar = '<img src="' + p1AvatarUrl + '"/>';
+    }
+    if (p2AvatarUrl){
+      p2.avatar = '<img src="' + p2AvatarUrl + '"/>';
+    }
+    return [p1, p2];
   }
 };
 
 $(document).ready(function(){
-    // get grid size and n in a row
-    // start a new game
     var game = null;
     $('form').submit(function(event){
       event.preventDefault();
+      if (!game){ // first game
+        var gridSize = $('#gridSize').val() || 3;
+        var nInARow = $('#nInARow').val() || 3;
+        game = webGui.game(gridSize, nInARow);
+        var players = webGui.playerSetup();
+        game.addPlayer(players[0]);
+        game.addPlayer(players[1]);
+      }
       var gridSize = $('#gridSize').val() || 3;
       var nInARow = $('#nInARow').val() || 3;
-      var p1Name = $('#player1Name').val() || "player 1";
-      var p2Name = $('#player2Name').val() || "player 2";
-      console.log('forming ',gridSize,nInARow);
-      game = webGui.game(gridSize, nInARow);
-      game.addPlayer(tictactoe.player(p1Name, 'x'));
-      game.addPlayer(tictactoe.player(p2Name, 'o'));
+      game.resetBoard(gridSize, nInARow);    // reset in-memory board, player data retained
+      game.webBoard = webGui.board(gridSize); // reset dom board
       game.play();
     });
 
     $('#reset').on('click', function(){
-      if (game){
+        console.log('forming ',gridSize,nInARow);
         var gridSize = $('#gridSize').val() || 3;
         var nInARow = $('#nInARow').val() || 3;
-        game.reset(gridSize, nInARow);    // reset in-memory board, players retained
-        game.webBoard = webGui.board(gridSize); // reset dom board
+        game = webGui.game(gridSize, nInARow);
+        var players = webGui.playerSetup();
+        game.addPlayer(players[0]);
+        game.addPlayer(players[1]);
         game.play();
-      }
     });
 });
