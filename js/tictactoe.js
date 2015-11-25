@@ -52,6 +52,7 @@ var tictactoe = {
     return {
       name: name,
       piece: piece,
+      score: 0,
       getMove: function(){
         var move = prompt(this.name + ': make a move');
         move = move.split(',');
@@ -89,7 +90,9 @@ var tictactoe = {
               this.curPlayer = this.getNextPlayer();
             }else{
               if (gameState === this.WINNER){
+                debugger;
                 console.log(this.curPlayer.name + " has won");
+
               }else{
                 console.log("DRAW");
               }
@@ -123,6 +126,7 @@ var tictactoe = {
             this.checkLeftDiag(move) >= this.nInARow ||
             this.checkRightDiag(move) >= this.nInARow){
           console.log("winner");
+          this.curPlayer.score++;
           res = this.WINNER;
         }else if (this.moveCount === this.board.size() * this.board.size()){
           console.log("draw");
@@ -173,6 +177,12 @@ var tictactoe = {
             return 1 + this.getMatches({y: +move.y + 1, x: +move.x - 1}, "SW");
             break;
         }
+      },
+      reset: function(boardSize, nInARow){
+        this.board = tictactoe.board(boardSize);
+        this.nInARow = nInARow;
+        this.curPlayer = this.players[0];
+        this.moveCount = 0;
       }
     };
   }

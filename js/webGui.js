@@ -2,6 +2,8 @@ console.log("webGui");
 
 var webGui = {
   board: function(size){
+    // remove any previous board
+    $(".row").remove();
     // create NxN grid
     for (var i=0; i < size; i++){
       $("#container").append('<div class="row" y="' + i + '">');
@@ -30,6 +32,7 @@ var webGui = {
           y: $(this).closest(".row").attr("y"),
           x: $(this).attr("x")
         };
+        console.log(move);
         if (g.makeMove(move)){
           g.webBoard.setSquare(move, g.curPlayer.piece);
           g.board.show();
@@ -38,8 +41,10 @@ var webGui = {
               g.curPlayer = g.getNextPlayer();
           }else{
             if (gameState === g.WINNER){
-              $("#container").append(g.curPlayer.name + " has WON");
-              console.log(g.curPlayer.name + " has won");
+              $("#container").append(g.curPlayer.name + " has WON<br>");
+              var otherPlayer = g.getNextPlayer();
+              $("#container").append(g.curPlayer.name + ":" + g.curPlayer.score + "<br>" + otherPlayer.name + ":" + otherPlayer.score);
+              console.log(g.curPlayer.name + " has won", g.curPlayer.score);
             }else{
               $("#container").append("DRAW");
               console.log("DRAW");
@@ -57,14 +62,27 @@ var webGui = {
 $(document).ready(function(){
     // get grid size and n in a row
     // start a new game
+    var game = null;
     $('form').submit(function(event){
       event.preventDefault();
-      var gridSize = $('#gridSize').val();
-      var nInARow = $('#nInARow').val();
+      var gridSize = $('#gridSize').val() || 3;
+      var nInARow = $('#nInARow').val() || 3;
+      var p1Name = $('#player1Name').val() || "player 1";
+      var p2Name = $('#player2Name').val() || "player 2";
       console.log('forming ',gridSize,nInARow);
-      var g = webGui.game(gridSize, nInARow);
-      g.addPlayer(tictactoe.player('p1', 'x'));
-      g.addPlayer(tictactoe.player('p2', 'o'));
-      g.play();
+      game = webGui.game(gridSize, nInARow);
+      game.addPlayer(tictactoe.player(p1Name, 'x'));
+      game.addPlayer(tictactoe.player(p2Name, 'o'));
+      game.play();
+    });
+
+    $('#reset').on('click', function(){
+      if (game){
+        var gridSize = $('#gridSize').val() || 3;
+        var nInARow = $('#nInARow').val() || 3;
+        game.reset(gridSize, nInARow);    // reset in-memory board, players retained
+        game.webBoard = webGui.board(gridSize); // reset dom board
+        game.play();
+      }
     });
 });
