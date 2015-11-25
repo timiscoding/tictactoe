@@ -10,9 +10,19 @@
   <script src="js/webGui.js"></script>
 </head>
 <body>
-<h2>Please open the console to see the output</h2>
+<div id="playerBar">
+  <div id="p1">
+    <div class="pic">X</div>
+    <div class="name">Player 1</div>
+  </div>
+  <div id="score">1 : 1</div>
+  <div id="p2">
+    <div class="pic">O</div>
+    <div class="name">Player 2</div>
+  </div>
+</div>
 <div id="container">
-  <!-- <div id="playerBar"></div> -->
+  <h2>Tic Tac Toe</h2>
   <form>
     <input id="gridSize" type="number" placeholder="Size of grid"/>
     <input id="nInARow" type="number" placeholder="n-in-a-row"/>

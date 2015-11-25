@@ -12,9 +12,9 @@ var webGui = {
       }
     }
     // change width and height of squares proportional to window height
-    $(".row").css("height", "calc(75vh / " + size + ")");
-    $(".col").css({"width": "calc(100% / " + size + ")",
-                  "height": "calc(75vh / " + size + ")",
+    $(".row").css("height", "calc(70vh / " + size + ")");
+    $(".col").css({"width": "calc(70vh / " + size + ")",
+                  "height": "100%", //calc(75vh / " + size + ")",
                   "line-height": "calc(75vh / " + size + ")"});
     // create player info
     $("#container").append('<div class="playerBar"');

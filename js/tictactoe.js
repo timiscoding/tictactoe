@@ -90,9 +90,7 @@ var tictactoe = {
               this.curPlayer = this.getNextPlayer();
             }else{
               if (gameState === this.WINNER){
-                debugger;
                 console.log(this.curPlayer.name + " has won");
-
               }else{
                 console.log("DRAW");
               }
