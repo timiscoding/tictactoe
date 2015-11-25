@@ -14,6 +14,8 @@ var webGui = {
     $(".col").css({"width": "calc(100% / " + size + ")",
                   "height": "calc(75vh / " + size + ")",
                   "line-height": "calc(75vh / " + size + ")"});
+    // create player info
+    $("#container").append('<div class="playerBar"');
     return {
       setSquare: function(move, piece){
           $('.row').eq(move.y).find('.col').eq(move.x).text(piece); // Updates the GUI's board's grid to keep them in sync
@@ -53,8 +55,16 @@ var webGui = {
 };
 
 $(document).ready(function(){
-    var g = webGui.game(3, 3);
-    g.addPlayer(tictactoe.player('p1', 'x'));
-    g.addPlayer(tictactoe.player('p2', 'o'));
-    g.play();
+    // get grid size and n in a row
+    // start a new game
+    $('form').submit(function(event){
+      event.preventDefault();
+      var gridSize = $('#gridSize').val();
+      var nInARow = $('#nInARow').val();
+      console.log('forming ',gridSize,nInARow);
+      var g = webGui.game(gridSize, nInARow);
+      g.addPlayer(tictactoe.player('p1', 'x'));
+      g.addPlayer(tictactoe.player('p2', 'o'));
+      g.play();
+    });
 });
