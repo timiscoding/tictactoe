@@ -106,7 +106,7 @@ var webGui = {
   },
   resetGame: function(){
     var gridSize = $('#element_to_pop_up #gridSize').val() || $('#options #gridSize').val() || 3;
-    var nInARow = $('#nInARow').val() || 3;
+    var nInARow = $('#element_to_pop_up #nInARow') || $('#options #nInARow').val() || 3;
     console.log(gridSize, nInARow);
     var game = webGui.createGame(gridSize, nInARow);
     var players = webGui.playerSetup();
