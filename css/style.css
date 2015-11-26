@@ -22,7 +22,7 @@ body {
   background-color: rgba(33,0,125,1);
   vertical-align: middle;       /* keeps square from moving down when square contains content */
   text-align: center;
-  font-size: 5vh;
+  /*font-size: 5vh;*/
   color: white;
 }
 
@@ -61,6 +61,7 @@ body {
 
 #p1 .name, #p2 .name{
   display: inline-block;
+  /*background-color: blue;*/
   color: black;
   width: 75%;
   height: 100%;
@@ -70,8 +71,8 @@ body {
 
 #p1 .pic, #p2 .pic {
   display: inline-block;
-  width: 20vh;
-  height: 20vh;
+  width: 24%;
+  height: 200%;
   background-color: green;
   border: 1px solid black;
   border-radius: 5px;
@@ -109,4 +110,11 @@ img {
 
 #gridSize, #nInARow {
   width: 60px;
+}
+
+form {
+  display: inline-block;
+  /*width: 400px;*/
+  margin: 0 auto;
+  background-color: grey;
 }

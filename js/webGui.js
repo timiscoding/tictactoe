@@ -38,7 +38,8 @@ var webGui = {
     $(".row").css("height", "calc(70vh / " + size + ")");
     $(".col").css({"width": "calc(70vh / " + size + ")",
                   "height": "100%", //calc(75vh / " + size + ")",
-                  "line-height": "calc(75vh / " + size + ")"});
+                  "line-height": "calc(65vh / " + size + ")",
+                  "font-size": "calc(65vh / " + size + ")"});
     // create player info
     // $("#container").append('<div class="playerBar"');
     return {
