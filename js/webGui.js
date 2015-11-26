@@ -62,6 +62,8 @@ var webGui = {
           var gameState = g.gameState(move);
           if (gameState === g.PLAY){
               g.curPlayer = g.getNextPlayer();
+              $('#p1 .hand').toggle();
+              $('#p2 .hand').toggle();
           }else{
             if (gameState === g.WINNER){
               // $("#container").append(g.curPlayer.name + " has WON<br>");
@@ -114,6 +116,7 @@ var webGui = {
     game.addPlayer(players[1]);
     // console.log("wtf",game.players[0].score, game.players[1].score);
     $("#score").text("0 : 0");
+    $('#p1 .hand').toggle();
     return game;
   },
   alignForm: function($form){

@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Francois+One);
+
 * {
     -webkit-box-sizing: border-box;
    -moz-box-sizing: border-box;
@@ -9,6 +11,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  font-family: 'Francois One', sans-serif;
 }
 
 .row {
@@ -63,7 +66,7 @@ body {
   display: inline-block;
   /*background-color: blue;*/
   color: black;
-  width: 70%;
+  width: 60%;
   height: 100%;
   vertical-align: top;
   font-size: 5vh;
@@ -79,6 +82,18 @@ body {
   text-align: center;
   line-height: 20vh;
   font-size: 10vh;  /* NEED TO FIND MIN(vh, vv) */
+}
+
+#p1 .img, #p2 .img {
+  display: inline-block;
+  width: 10%;
+  height: 100%;
+  /*background-color: red;*/
+  vertical-align: top;
+}
+
+#playerBar .hand {
+  display: none;
 }
 
 #score {
@@ -119,3 +134,4 @@ form {
   border-radius: 5px;
   padding: 10px;
 }
+
