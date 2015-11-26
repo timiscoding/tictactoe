@@ -115,6 +115,19 @@ var webGui = {
     // console.log("wtf",game.players[0].score, game.players[1].score);
     $("#score").text("0 : 0");
     return game;
+  },
+  displayForm: function(){
+      // var $form = $(formStr).appendTo(toElement);
+      var max = 0;
+      $('label').each(function(){
+        if ($(this).width() > max){
+          max = $(this).width();
+        }
+      });
+      console.log('max ', max);
+      $('label').css("display", "inline-block");
+      $('label').width(max);
+      // return $form;
   }
 };
 
@@ -123,6 +136,7 @@ $(document).ready(function(){
     var game = null;
     // console.log('form: ' + webGui.form);
     var $startScreen = $(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'ng'], true)).appendTo('#container');
+    webGui.displayForm();
     $('body').on('click', 'button', function(event){
       event.preventDefault();
       var $button = $(this); //.find('input[type="submit"]');
@@ -146,6 +160,7 @@ $(document).ready(function(){
         webGui.popup.close();
       }else if ($button.attr('id') === "settings"){
         webGui.popup = $('#element_to_pop_up').html(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'rg'], true)).bPopup({modalColor: 'none'});
+        webGui.displayForm();
         console.log(webGui.popup);
       }
       game.play();
