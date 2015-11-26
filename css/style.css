@@ -49,7 +49,6 @@ body {
   width: 40%;
   background-color: black;
   height: 100%;
-  /*text-indent: 40%;*/
   line-height: 10vh;
   text-align: justify;
 }
@@ -63,26 +62,14 @@ body {
 #p1 .name, #p2 .name{
   display: inline-block;
   color: red;
-  /*background-color: white;*/
   width: 75%;
   height: 100%;
   vertical-align: top;
   padding: 10px;
 }
 
-/*#p1 .score{
-  display: inline-block;
-  background-color: yellow;
-  width: 100px;
-  height: 100%;
-  text-align: right;
-}*/
-
 #p1 .pic, #p2 .pic {
   display: inline-block;
-  /*position: absolute;
-  top: 20px;
-  left: 20px;*/
   width: 20%;
   height: 20vh;
   background-color: green;
@@ -115,5 +102,8 @@ img {
     padding:20px;
     min-width:400px;
     min-height: 180px;
+}
 
+#gridSize, #nInARow {
+  width: 60px;
 }

@@ -2,19 +2,25 @@ console.log("webGui");
 
 var webGui = {
   popup: null,
-  formGenerator: function(settings){
-    var g = '<p><label for="gridSize">Grid size</label><input id="gridSize" type="number" value="3"/></p>';
-    var niar = '<p><label for="nInARow">N-in-a-row</label><input id="nInARow" type="number" value="3"/></p>';
-    var p1n = '<p><label for="player1Name">Player 1 name</label><input id="player1Name" type="text" placeholder="Player 1"/></p>';
-    var p1a = '<p><label for="player1Avatar">Player 1 avatar URL</label><input id="player1Avatar" type="text" placeholder="X"/></p>';
-    var p2n = '<p><label for="player2Name">Player 2 name</label><input id="player2Name" type="text" placeholder="Player 2"/></p>';
-    var p2a = '<p><label for="player2Avatar">Player 2 avatar URL</label><input id="player2Avatar" type="text" placeholder="O"/></p>';
-    var ng = '<input id="newGame" type="submit" value="New game">';
-    var rg = '<input id="resetGame" type="submit" value="Reset game">';
+  formGenerator: function(settings, newLine){
+    var g = '<label for="gridSize">Grid size</label><input id="gridSize" type="number" value="3"/>';
+    var niar = '<label for="nInARow">N-in-a-row</label><input id="nInARow" type="number" value="3"/>';
+    var p1n = '<label for="player1Name">Player 1 name</label><input id="player1Name" type="text" placeholder="Player 1"/>';
+    var p1a = '<label for="player1Avatar">Player 1 avatar URL</label><input id="player1Avatar" type="text" placeholder="X"/>';
+    var p2n = '<label for="player2Name">Player 2 name</label><input id="player2Name" type="text" placeholder="Player 2"/>';
+    var p2a = '<label for="player2Avatar">Player 2 avatar URL</label><input id="player2Avatar" type="text" placeholder="O"/>';
+    var ng = '<button id="newGame">New game</button>';
+    var rg = '<button id="resetGame">Reset game</button>';
+    var s = '<button id="settings">settings</button>';
     // var rg = '<button id="reset">Reset</button>';
     var str = "<form>\n";
     for (var i=0; i < settings.length; i++){
-      str += eval(settings[i]) + '\n';
+      var element = settings[i];
+      if (newLine && (element !== 'ng' || element !== 'rg')){
+        str += "<p>" + eval(element) + '</p>\n';
+      }else{
+        str += eval(settings[i]) + '\n';
+      }
     }
     return str + '</form>';
   },
@@ -23,7 +29,7 @@ var webGui = {
     $(".row").remove();
     // create NxN grid
     for (var i=0; i < size; i++){
-      $("#container").append('<div class="row" y="' + i + '">');
+      $("#board").append('<div class="row" y="' + i + '">');
       for (var j=0; j < size; j++){
         $(".row").eq(i).append('<div class="col" x="' + j + '">');
       }
@@ -34,7 +40,7 @@ var webGui = {
                   "height": "100%", //calc(75vh / " + size + ")",
                   "line-height": "calc(75vh / " + size + ")"});
     // create player info
-    $("#container").append('<div class="playerBar"');
+    // $("#container").append('<div class="playerBar"');
     return {
       setSquare: function(move, piece){
           $('.row').eq(move.y).find('.col').eq(move.x).html(piece); // Updates the GUI's board's grid to keep them in sync
@@ -99,8 +105,9 @@ var webGui = {
     return [p1, p2];
   },
   resetGame: function(){
-    var gridSize = $('#gridSize').val() || 3;
+    var gridSize = $('#element_to_pop_up #gridSize').val() || $('#options #gridSize').val() || 3;
     var nInARow = $('#nInARow').val() || 3;
+    console.log(gridSize, nInARow);
     var game = webGui.createGame(gridSize, nInARow);
     var players = webGui.playerSetup();
     game.addPlayer(players[0]);
@@ -112,21 +119,19 @@ var webGui = {
 };
 
 $(document).ready(function(){
-    console.log(webGui.formGenerator(['g', 'niar']));
+    // console.log(webGui.formGenerator(['g', 'niar']));
     var game = null;
     // console.log('form: ' + webGui.form);
-    $(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'ng'])).appendTo('#container');
-
-    $('body').on('submit', 'form', function(event){
+    var $startScreen = $(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'ng'], true)).appendTo('#container');
+    $('body').on('click', 'button', function(event){
       event.preventDefault();
-      var $button = $(this).find('input[type="submit"]');
-      // console.log('button', button);
+      var $button = $(this); //.find('input[type="submit"]');
+      console.log('button', $button);
       if (!game){ // first game
-        $('form').remove();
-        $('<button id="settings">settings</button>').appendTo('#container');
-        console.log('first game', webGui.formGenerator(['g', 'niar', 'ng']));
-        $(webGui.formGenerator(['g', 'niar', 'ng'])).appendTo('#container');
         game = webGui.resetGame();
+        $startScreen.remove();
+        $(webGui.formGenerator(['g', 'niar', 'ng', 's'], false)).appendTo('#options');
+        console.log('first game', webGui.formGenerator(['g', 'niar', 'ng']));
       }else if ($button.attr('id') === "newGame"){
         // resets board, but not player info and scores
         console.log('form found new game');
@@ -134,23 +139,15 @@ $(document).ready(function(){
         var nInARow = $('#nInARow').val() || 3;
         game.resetBoard(gridSize, nInARow);    // reset in-memory board, player data retained
         game.webBoard = webGui.board(gridSize); // reset dom board
-      }else{
+      }else if ($button.attr('id') === "resetGame"){
         // resets everything including player info and scores
         console.log('form found reset game');
         game = webGui.resetGame();
+        webGui.popup.close();
+      }else if ($button.attr('id') === "settings"){
+        webGui.popup = $('#element_to_pop_up').html(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'rg'], true)).bPopup({modalColor: 'none'});
+        console.log(webGui.popup);
       }
       game.play();
-      console.log('new game', $(this).closest('#element_to_pop_up'));
-
-      if ($('#element_to_pop_up').is(':visible')){
-        webGui.popup.close();
-      }
-    });
-
-    $('body').on('click', '#settings', function(event){
-      event.preventDefault();
-      console.log("settings");
-      webGui.popup = $('#element_to_pop_up').html(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'rg'])).bPopup({modalColor: 'none'});
-      console.log(webGui.popup);
     });
 });
