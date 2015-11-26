@@ -17,7 +17,7 @@ This game was built with:
 * Score board keeps track of who's winning
 * Customise player names
 * Play the game using your favourite picture by supplying a link in the player avatar field. For extra fun, choose the same picture for both players so you have to remember where you put your pieces.
-* A hand pointing left or right indicates who's turn it is
+* A hand pointing left or right indicates who's turn it is in case you have a memory of a fish
 
 ## Demo
 
@@ -27,7 +27,6 @@ This game was built with:
 
 Thanks to Joel and Jack for helping me out with CSS and design issues. Jack helped me understand my program better and how the web interface synced with my console game.
 
-## Approach taken - you can ignore this part if technical details bore you
 
 ## Unsolved problems
 
@@ -36,6 +35,7 @@ Thanks to Joel and Jack for helping me out with CSS and design issues. Jack help
 * Didn't have time to let the player choose a letter as their piece
 * Didn't check if player avatars are the same
 
+## Approach taken - you can ignore this part if technical details bore you
 
 ### Extensibility
 

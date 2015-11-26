@@ -1,12 +1,12 @@
 console.log('tictactoe');
 var tictactoe = {
-  board: function(size){
+  board: function(size){  // creates a board of size x size dimension
     var b = {
-      grid: [],
-      size: function(){
+      grid: [], // 2d array representing squares on board
+      size: function(){ // returns the size of the board
         return this.grid.length;
       },
-      show: function(){
+      show: function(){  // prints the board to console.log
         console.log('cur board');
         var grid = "";
         for (var i=0; i < this.size(); i++){
@@ -23,19 +23,16 @@ var tictactoe = {
         console.log('end board');
         return grid;
       },
-      setSquare: function(move, piece){
+      setSquare: function(move, piece){ // put an 'x' or 'o' on the board
         this.grid[move.y][move.x] = piece;
       },
-      getSquare: function(move){
-        var square = -1;
+      getSquare: function(move){ // get the piece of a square on the board
+        var square = -1;    // out of bounds
         if ((move.y >= 0 && move.y < this.size()) &&
             move.x >= 0 && move.x < this.size()){
           square = this.grid[move.y][move.x];
         }
         return square;
-      },
-      createBoard: function (size) {
-
       }
     };
     // create an N x N board with empty squares
@@ -48,12 +45,12 @@ var tictactoe = {
     return b;
   },
 
-  player: function(name, piece){
+  player: function(name, piece){ // create a player with 'name' and 'piece'. Piece can be any string but normally is 'x' or 'o'
     return {
       name: name,
       piece: piece,
       score: 0,
-      getMove: function(){
+      getMove: function(){   // get player input from prompt
         var move = prompt(this.name + ': make a move');
         move = move.split(',');
         return {y: move[0].trim(), x: move[1].trim()};
@@ -61,7 +58,7 @@ var tictactoe = {
     };
   },
 
-  game: function(boardSize, nInARow){
+  game: function(boardSize, nInARow){ // create a game of boardSize x boardSize dimension and the winner who gets 'nInARow' pieces in a line
     return {
       PLAY: -1,
       DRAW: 0,
@@ -80,7 +77,7 @@ var tictactoe = {
       getNextPlayer: function(){
         return this.players[(this.players.indexOf(this.curPlayer) + 1) % this.players.length];
       },
-      play: function(){
+      play: function(){ // game playing loop that gets players move, validates it, puts piece on board and checks if game state (continue play, game over)
         while (true){
           var move = this.curPlayer.getMove();
           if (this.makeMove(move)){
@@ -99,7 +96,7 @@ var tictactoe = {
           }
         }
       },
-      makeMove: function(move){
+      makeMove: function(move){ // puts a piece on the board and updates total moves made
         if (!this.isValidMove(move)){
           return false;
         }
@@ -107,7 +104,7 @@ var tictactoe = {
         this.moveCount++;
         return true;
       },
-      isValidMove: function(move){
+      isValidMove: function(move){  // checks if move is legal. ie. if 'move' is on a square that is occupied or outside the board dimensions
         if (move.y >= this.board.size() ||
             move.x >= this.board.size() ||
             this.board.getSquare(move)){
@@ -117,7 +114,7 @@ var tictactoe = {
           return true;
         }
       },
-      gameState: function(move){
+      gameState: function(move){  // checks if the game is over based on the rules of tic tac toe
         var res = this.PLAY;
         if (this.checkColumn(move) >= this.nInARow ||
             this.checkRow(move) >= this.nInARow ||
@@ -132,19 +129,19 @@ var tictactoe = {
         }
         return res;
       },
-      checkColumn: function(move){
+      checkColumn: function(move){ // finds how many pieces are in a vertical line from 'move'
         return this.getMatches(move, "N") + this.getMatches(move, "S") - 1; // move is counted twice
       },
-      checkRow: function(move){
+      checkRow: function(move){ // finds how many pieces are in a horizontal line from 'move'
         return this.getMatches(move, "E") + this.getMatches(move, "W") - 1; // move is counted twice
       },
-      checkRightDiag: function(move){
+      checkRightDiag: function(move){ // finds how many pieces are in a diagonal leaning right
         return this.getMatches(move, "NE") + this.getMatches(move, "SW") - 1; // move is counted twice
       },
-      checkLeftDiag: function(move){
+      checkLeftDiag: function(move){ // finds how many pieces are in a diagonal learning left
         return this.getMatches(move, "NW") + this.getMatches(move, "SE") - 1; // move is counted twice
       },
-      getMatches: function(move, dir){
+      getMatches: function(move, dir){ // finds how many pieces are in a line starting from move to 'dir' direction
         var square = this.board.getSquare(move);
         if (square !== this.curPlayer.piece){
           return 0;
@@ -176,7 +173,7 @@ var tictactoe = {
             break;
         }
       },
-      resetBoard: function(boardSize, nInARow){
+      resetBoard: function(boardSize, nInARow){ // resets the game
         this.board = tictactoe.board(boardSize);
         this.nInARow = nInARow;
         this.curPlayer = this.players[0];
