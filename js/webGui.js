@@ -1,7 +1,6 @@
 console.log("webGui");
 
 var webGui = {
-  popup: null,
   formGenerator: function(settings, newLine){
     var g = '<label for="gridSize">Grid size</label><input id="gridSize" type="number" value="3"/>';
     var niar = '<label for="nInARow">N-in-a-row</label><input id="nInARow" type="number" value="3"/>';
@@ -39,8 +38,6 @@ var webGui = {
                   "height": "100%", //calc(75vh / " + size + ")",
                   "line-height": "calc(65vh / " + size + ")",
                   "font-size": "calc(65vh / " + size + ")"});
-    // create player info
-    // $("#container").append('<div class="playerBar"');
     return {
       setSquare: function(move, piece){
           $('.row').eq(move.y).find('.col').eq(move.x).html(piece); // Updates the GUI's board's grid to keep them in sync
@@ -55,7 +52,6 @@ var webGui = {
           y: $(this).closest(".row").attr("y"),
           x: $(this).attr("x")
         };
-        console.log(move);
         if (g.makeMove(move)){
           g.webBoard.setSquare(move, g.curPlayer.avatar || g.curPlayer.piece);
           g.board.show();
@@ -66,16 +62,11 @@ var webGui = {
               $('#p2 .hand').toggle();
           }else{
             if (gameState === g.WINNER){
-              // $("#container").append(g.curPlayer.name + " has WON<br>");
               $('#element_to_pop_up').html(g.curPlayer.name + " has won!").bPopup({modalColor: 'none'});
               var otherPlayer = g.getNextPlayer();
-              // $("#container").append(g.curPlayer.name + ":" + g.curPlayer.score + "<br>" + otherPlayer.name + ":" + otherPlayer.score);
               $("#score").text(g.players[0].score + " : " + g.players[1].score);
-              console.log(g.curPlayer.name + " has won", g.curPlayer.score);
             }else{
-              // $("#container").append("DRAW");
               $('#element_to_pop_up').html("It's a draw :(").bPopup({modalColor: 'none'});
-              console.log("DRAW");
             }
             $('.col').off('click');
           }
@@ -90,7 +81,6 @@ var webGui = {
     var p2Name = $('#player2Name').val() || "player 2";
     $('#playerBar #p1 .name').text(p1Name);
     $('#playerBar #p2 .name').text(p2Name);
-    // console.log("playerbar p1 name: " + $('#playerBar #p1 .name').text());
     var p1AvatarUrl = $('#player1Avatar').val();
     var p2AvatarUrl = $('#player2Avatar').val();
 
@@ -109,55 +99,45 @@ var webGui = {
   resetGame: function(){
     var gridSize = $('#element_to_pop_up #gridSize').val() || $('#gridSize').val() || 3;
     var nInARow = $('#element_to_pop_up #nInARow').val() || $('#nInARow').val() || 3;
-    console.log('gridsize', gridSize, 'nInARow', nInARow);
     var game = webGui.createGame(gridSize, nInARow);
     var players = webGui.playerSetup();
     game.addPlayer(players[0]);
     game.addPlayer(players[1]);
-    // console.log("wtf",game.players[0].score, game.players[1].score);
     $("#score").text("0 : 0");
     $('#p1 .hand').show();
     $('#p2 .hand').hide();
     return game;
   },
   alignForm: function($form){
-      // var $form = $(formStr).appendTo(toElement);
       var max = 0;
       $($form).find('label').each(function(){
         if ($(this).width() > max){
           max = $(this).width();
         }
       });
-      console.log('max ', max);
       $($form).find('label').css("display", "inline-block");
       $($form).find('label').width(max);
-      // return $form;
   }
 };
 
 $(document).ready(function(){
-    // console.log(webGui.formGenerator(['g', 'niar']));
     var game = null;
-    // console.log('form: ' + webGui.form);
-    // $('<h1>TIC TAC TOE</h1>').appendTo('#container');
+    var popup = null;
     var $startScreen = $(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'ng'], true)).appendTo('#container');
-    $startScreen.css({"width": "50%",
+    $startScreen.css({"width": "70%",
                       "margin": "0 auto"});
     webGui.alignForm($startScreen);
     $('body').on('click', 'button', function(event){
       event.preventDefault();
       var $button = $(this); //.find('input[type="submit"]');
-      console.log('button', $button);
       if (!game){ // first game
         game = webGui.resetGame();
         $startScreen.remove();
         $(webGui.formGenerator(['g', 'niar', 'ng', 's'], false)).appendTo('#options');
         $('form').css({"width": "65%",
                       "margin": "1vh auto"});
-        console.log('first game', webGui.formGenerator(['g', 'niar', 'ng']));
       }else if ($button.attr('id') === "newGame"){
         // resets board, but not player info and scores
-        console.log('form found new game');
         var gridSize = $('#gridSize').val() || 3;
         var nInARow = $('#nInARow').val() || 3;
         game.resetBoard(gridSize, nInARow);    // reset in-memory board, player data retained
@@ -166,14 +146,12 @@ $(document).ready(function(){
         $('#p2 .hand').hide();
       }else if ($button.attr('id') === "resetGame"){
         // resets everything including player info and scores
-        console.log('form found reset game');
         game = webGui.resetGame();
-        webGui.popup.close();
+        popup.close();
       }else if ($button.attr('id') === "settings"){
         var $form = $(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'rg'], true));
-        webGui.popup = $('#element_to_pop_up').html($form).bPopup({modalColor: 'none'});
+        popup = $('#element_to_pop_up').html($form).bPopup({modalColor: 'none'});
         webGui.alignForm($form);
-        console.log(webGui.popup);
       }
       game.play();
     });

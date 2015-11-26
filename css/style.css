@@ -7,7 +7,6 @@
 }
 
 body {
-  /*background-color: rgba(50,50,50,0.5);*/
   background-image: url('../images/bg.jpg');
   background-size: cover;
   display: flex;
@@ -17,7 +16,6 @@ body {
 }
 
 .row {
-  /*border: 1px solid red;*/
   text-align: center;
 }
 
@@ -27,7 +25,6 @@ body {
   background-color: rgba(33,0,125,1);
   vertical-align: middle;       /* keeps square from moving down when square contains content */
   text-align: center;
-  /*font-size: 5vh;*/
   color: white;
 }
 
@@ -43,7 +40,6 @@ body {
 #playerBar {
   position: relative;
   border: 1px solid black;
-  /*background-color: rgba(51, 172,145, 1);*/
   width: 100%;
   height: 10vh;
   text-align: justify;
@@ -53,7 +49,6 @@ body {
   display: inline-block;
   position: relative;
   width: 40%;
-  /*background-color: rgba(51, 172,145, 1);*/
   height: 100%;
   line-height: 10vh;
   text-align: justify;
@@ -72,7 +67,6 @@ body {
 
 #p1 .name, #p2 .name{
   display: inline-block;
-  /*background-color: blue;*/
   color: black;
   width: 60%;
   height: 100%;
@@ -96,7 +90,6 @@ body {
   display: inline-block;
   width: 10%;
   height: 100%;
-  /*background-color: red;*/
   vertical-align: top;
 }
 
