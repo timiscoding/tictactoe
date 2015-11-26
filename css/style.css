@@ -47,7 +47,7 @@ body {
   display: inline-block;
   position: relative;
   width: 40%;
-  background-color: grey;
+  background-color: black;
   height: 100%;
   /*text-indent: 40%;*/
   line-height: 10vh;
@@ -63,7 +63,7 @@ body {
 #p1 .name, #p2 .name{
   display: inline-block;
   color: red;
-  background-color: white;
+  /*background-color: white;*/
   width: 75%;
   height: 100%;
   vertical-align: top;
@@ -104,4 +104,16 @@ body {
 img {
   max-height: 100%;
   max-width: 100%;
+}
+
+#element_to_pop_up {
+  display:none;
+  border: 1px solid black;
+      background-color: rgba(200,200,200,0.75);
+    border-radius:15px;
+    color: black;
+    padding:20px;
+    min-width:400px;
+    min-height: 180px;
+
 }
