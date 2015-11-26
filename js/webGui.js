@@ -105,14 +105,14 @@ var webGui = {
     return [p1, p2];
   },
   resetGame: function(){
-    var gridSize = $('#element_to_pop_up #gridSize').val() || $('#options #gridSize').val() || 3;
-    var nInARow = $('#element_to_pop_up #nInARow') || $('#options #nInARow').val() || 3;
-    console.log(gridSize, nInARow);
+    var gridSize = $('#element_to_pop_up #gridSize').val() || $('#gridSize').val() || 3;
+    var nInARow = $('#element_to_pop_up #nInARow').val() || $('#nInARow').val() || 3;
+    console.log('gridsize', gridSize, 'nInARow', nInARow);
     var game = webGui.createGame(gridSize, nInARow);
     var players = webGui.playerSetup();
     game.addPlayer(players[0]);
     game.addPlayer(players[1]);
-    console.log("wtf",game.players[0].score, game.players[1].score);
+    // console.log("wtf",game.players[0].score, game.players[1].score);
     $("#score").text("0 : 0");
     return game;
   }
