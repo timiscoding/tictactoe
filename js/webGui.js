@@ -116,7 +116,8 @@ var webGui = {
     game.addPlayer(players[1]);
     // console.log("wtf",game.players[0].score, game.players[1].score);
     $("#score").text("0 : 0");
-    $('#p1 .hand').toggle();
+    $('#p1 .hand').show();
+    $('#p2 .hand').hide();
     return game;
   },
   alignForm: function($form){
@@ -138,6 +139,7 @@ $(document).ready(function(){
     // console.log(webGui.formGenerator(['g', 'niar']));
     var game = null;
     // console.log('form: ' + webGui.form);
+    // $('<h1>TIC TAC TOE</h1>').appendTo('#container');
     var $startScreen = $(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'ng'], true)).appendTo('#container');
     $startScreen.css({"width": "50%",
                       "margin": "0 auto"});
@@ -160,6 +162,8 @@ $(document).ready(function(){
         var nInARow = $('#nInARow').val() || 3;
         game.resetBoard(gridSize, nInARow);    // reset in-memory board, player data retained
         game.webBoard = webGui.board(gridSize); // reset dom board
+        $('#p1 .hand').show();
+        $('#p2 .hand').hide();
       }else if ($button.attr('id') === "resetGame"){
         // resets everything including player info and scores
         console.log('form found reset game');
