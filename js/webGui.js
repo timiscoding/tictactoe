@@ -12,11 +12,10 @@ var webGui = {
     var ng = '<button id="newGame">New game</button>';
     var rg = '<button id="resetGame">Reset game</button>';
     var s = '<button id="settings">settings</button>';
-    // var rg = '<button id="reset">Reset</button>';
     var str = "<form>\n";
     for (var i=0; i < settings.length; i++){
       var element = settings[i];
-      if (newLine && (element !== 'ng' || element !== 'rg')){
+      if (newLine && element !== 'ng' && element !== 'rg'){
         str += "<p>" + eval(element) + '</p>\n';
       }else{
         str += eval(settings[i]) + '\n';
@@ -117,17 +116,17 @@ var webGui = {
     $("#score").text("0 : 0");
     return game;
   },
-  displayForm: function(){
+  alignForm: function($form){
       // var $form = $(formStr).appendTo(toElement);
       var max = 0;
-      $('label').each(function(){
+      $($form).find('label').each(function(){
         if ($(this).width() > max){
           max = $(this).width();
         }
       });
       console.log('max ', max);
-      $('label').css("display", "inline-block");
-      $('label').width(max);
+      $($form).find('label').css("display", "inline-block");
+      $($form).find('label').width(max);
       // return $form;
   }
 };
@@ -137,7 +136,9 @@ $(document).ready(function(){
     var game = null;
     // console.log('form: ' + webGui.form);
     var $startScreen = $(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'ng'], true)).appendTo('#container');
-    webGui.displayForm();
+    $startScreen.css({"width": "50%",
+                      "margin": "0 auto"});
+    webGui.alignForm($startScreen);
     $('body').on('click', 'button', function(event){
       event.preventDefault();
       var $button = $(this); //.find('input[type="submit"]');
@@ -146,6 +147,8 @@ $(document).ready(function(){
         game = webGui.resetGame();
         $startScreen.remove();
         $(webGui.formGenerator(['g', 'niar', 'ng', 's'], false)).appendTo('#options');
+        $('form').css({"width": "65%",
+                      "margin": "1vh auto"});
         console.log('first game', webGui.formGenerator(['g', 'niar', 'ng']));
       }else if ($button.attr('id') === "newGame"){
         // resets board, but not player info and scores
@@ -160,8 +163,9 @@ $(document).ready(function(){
         game = webGui.resetGame();
         webGui.popup.close();
       }else if ($button.attr('id') === "settings"){
-        webGui.popup = $('#element_to_pop_up').html(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'rg'], true)).bPopup({modalColor: 'none'});
-        webGui.displayForm();
+        var $form = $(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'rg'], true));
+        webGui.popup = $('#element_to_pop_up').html($form).bPopup({modalColor: 'none'});
+        webGui.alignForm($form);
         console.log(webGui.popup);
       }
       game.play();
