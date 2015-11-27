@@ -43,46 +43,46 @@ When I first saw the project spec bonuses asking us to make the game playable on
 
 The following tables show the object in the heading with the first letter capitalised, methods with brackets, variables as lowercase words and constants in uppercase.
 
-| Board                    | type/return                        | comments
-| :----------------------- | :--------------------------------- |
-| grid                     | [[]]                               | 2d array storing null, X, or O
-| size()                   | number                             | size of N x N board
-| show()                   | string                             | print board to console.log
-| setSquare(move, piece)   | move={x,y}, piece=string           | given move, sets the square to piece
-| getSquare(move)          | move={x,y}, returns null, 'X', 'O' | given move, gets the value of a square
-| board(size)              | returns {}                         | creates a new board object of size()
+| Board                    | type/return                        | comments                               |
+| ------------------------ | ---------------------------------- | -------------------------------------- |
+| grid                     | [[]]                               | 2d array storing null, X, or O         |
+| size()                   | number                             | size of N x N board                    |
+| show()                   | string                             | print board to console.log             |
+| setSquare(move, piece)   | move={x,y}, piece=string           | given move, sets the square to piece   |
+| getSquare(move)          | move={x,y}, returns null, 'X', 'O' | given move, gets the value of a square |
+| board(size)              | returns {}                         | creates a new board object of size()   |
 
-| Player           | type/return | comments
-| :--------------- | :----------
-| name             | string | name of player
-| piece            | string | 'x', 'o'
-| score            | number |
-| getMove()        | returns {x,y} | prompts player for move and converts it to a move object
-| player(name, piece) | returns {} | creates a player object
+| Player           | type/return   | comments                                                   |
+| :--------------- | :------------ | ---------------------------------------------------------- |
+| name             | string        | name of player                                             |
+| piece            | string        | 'x', 'o'                                                   |
+| score            | number        |                                                            |
+| getMove()        | returns {x,y} | prompts player for move and converts it to a move object   |
+| player(name, piece) | returns {} | creates a player object                                    |
 
-| Game | type/return | comments
-| :----|
-| PLAY | -1 | a game state to keep playing
-| WINNER | 1 | a game state that a winner has been found
-| DRAW | 0 | a game state that a draw has been found
-| board | Board | the board for this game
-| players | [Player, Player ... ] | array of Player objects
-| curPlayer | Player | the current player who will make a move
-| nInARow | number | how many pieces needed in a row to win
-| moveCount | number | total number of moves made
-| addPlayer(player) | Player | adds player to game
-| getNextPlayer() | Player | gets the next player in sequence from 'players'
-| play() | | game playing loop that gets move, validates it, makes move and checks game state
-| makeMove(move) | move={x,y}, returns boolean | places current player's piece on board and updates the move count
-| isValidMove(move) | move={x,y}, returns boolean | checks whether a move can be taken
-| gameState(move) | move={x,y}, returns PLAY/WINNER/DRAW | check if the game is over or to keep playing
-| checkColumn(move) | move={x,y}, returns number | checks how many of current players pieces are in a line from 'move'
-| checkRow(move) |
-| checkRightDiag(move)
-| checkLeftDiag(move)
-| getMatches(move, dir) | move={x,y}, dir=string, returns number | Given a direction (N, S, E, W, NE, NW, SE, SW) and a move, it searches starting from 'move' in that direction and returns the number of pieces of the current player in a line
-| resetBoard(boardSize, nInARow) | boardSize=number, nInARow=number | resets Game with new board, no players, etc
-| game(boardSize, nInARow) | creates a new game object
+| Game                           | type/return                            | comments
+| :----------------------------- | -------------------------------------- | ---------------------------------------------
+| PLAY                           | -1                                     | a game state to keep playing
+| WINNER                         | 1                                      | a game state that a winner has been found
+| DRAW                           | 0                                      | a game state that a draw has been found
+| board                          | Board                                  | the board for this game
+| players                        | [Player, Player ... ]                  | array of Player objects
+| curPlayer                      | Player                                 | the current player who will make a move
+| nInARow                        | number                                 | how many pieces needed in a row to win
+| moveCount                      | number                                 | total number of moves made
+| addPlayer(player)              | Player                                 | adds player to game
+| getNextPlayer()                | Player                                 | gets the next player in sequence from 'players'
+| play()                         |                                        | game playing loop that gets move, validates it, makes move and checks game state
+| makeMove(move)                 | move={x,y}, returns boolean            | places current player's piece on board and updates the move count
+| isValidMove(move)              | move={x,y}, returns boolean            | checks whether a move can be taken
+| gameState(move)                | move={x,y}, returns PLAY/WINNER/DRAW   | check if the game is over or to keep playing
+| checkColumn(move)              | move={x,y}, returns number             | checks how many of current players pieces are in a line from 'move'
+| checkRow(move)                 |                                        |
+| checkRightDiag(move)           |                                        |
+| checkLeftDiag(move)            |                                        |
+| getMatches(move, dir)          | move={x,y}, dir=string, returns number | Given a direction (N, S, E, W, NE, NW, SE, SW) and a move, it searches starting from 'move' in that direction and returns the number of pieces of the current player in a line
+| resetBoard(boardSize, nInARow) | boardSize=number, nInARow=number       | resets Game with new board, no players, etc
+| game(boardSize, nInARow)       |                                        | creates a new game object
 
 ### Separation of concerns
 
