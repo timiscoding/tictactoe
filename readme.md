@@ -76,7 +76,7 @@ The following tables show the object in the heading with the first letter capita
 | makeMove(move)                 | move={x,y}, returns boolean            | places current player's piece on board and updates the move count
 | isValidMove(move)              | move={x,y}, returns boolean            | checks whether a move can be taken
 | gameState(move)                | move={x,y}, returns PLAY/WINNER/DRAW   | check if the game is over or to keep playing
-| checkColumn(move)              | move={x,y}, returns number             | checks how many of current players pieces are in a line from `move`
+| checkColumn(move)              | move={x,y}, returns number             | checks how many of `curPlayer`'s pieces are in a line from `move`
 | checkRow(move)                 |                                        |
 | checkRightDiag(move)           |                                        |
 | checkLeftDiag(move)            |                                        |
