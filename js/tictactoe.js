@@ -1,4 +1,4 @@
-console.log('tictactoe');
+console.log("tictactoe");
 var tictactoe = {
   board: function(size){  // creates a board of size x size dimension
     var b = {
@@ -78,15 +78,38 @@ var tictactoe = {
         return this.players[(this.players.indexOf(this.curPlayer) + 1) % this.players.length];
       },
       play: function(){ // game playing loop that gets players move, validates it, puts piece on board and checks if game state (continue play, game over)
+        var move;
         while (true){
-          var move = this.curPlayer.getMove();
+          if (this.curPlayer.piece === 'x'){
+            console.log('Player X turn');
+            var initGameState = new GameState(this.curPlayer.piece, this.board.grid);
+            initGameState.generateMoves(initGameState);
+            console.log('running generateScores');
+            var oldBoard = JSON.parse(JSON.stringify(g.board.grid));
+            var oldPlayer = g.curPlayer.piece;
+            initGameState.generateScores(initGameState);
+            g.board.grid = oldBoard;
+            g.curPlayer.piece = oldPlayer;
+            var nextMove = initGameState.moves[0];
+            // debugger
+            initGameState.moves.forEach(function(gameState){
+              if (gameState.score > nextMove.score) {
+                nextMove = gameState;
+              }
+            });
+            console.log(initGameState, nextMove);
+            move = { x: nextMove.x, y: nextMove.y };
+            // debugger
+          }else{
+            move = this.curPlayer.getMove();
+          }
           if (this.makeMove(move)){
             this.board.show();
-            var gameState = this.gameState(move);
-            if (gameState === this.PLAY){
+            var finalState = this.finalState(move);
+            if (finalState === this.PLAY){
               this.curPlayer = this.getNextPlayer();
             }else{
-              if (gameState === this.WINNER){
+              if (finalState === this.WINNER){
                 console.log(this.curPlayer.name + " has won");
               }else{
                 console.log("DRAW");
@@ -114,17 +137,17 @@ var tictactoe = {
           return true;
         }
       },
-      gameState: function(move){  // checks if the game is over based on the rules of tic tac toe
+      finalState: function(move){  // checks if the game is over based on the rules of tic tac toe
         var res = this.PLAY;
         if (this.checkColumn(move) >= this.nInARow ||
             this.checkRow(move) >= this.nInARow ||
             this.checkLeftDiag(move) >= this.nInARow ||
             this.checkRightDiag(move) >= this.nInARow){
-          console.log("winner");
+          // console.log("winner");
           this.curPlayer.score++;
           res = this.WINNER;
-        }else if (this.moveCount === this.board.size() * this.board.size()){
-          console.log("draw");
+        }else if ( _.chain( this.board.grid ).flatten().compact().value().length === this.board.size() * this.board.size()){
+          // console.log("draw");
           res = this.DRAW;
         }
         return res;
@@ -149,28 +172,20 @@ var tictactoe = {
         switch (dir){
           case "N":
             return 1 + this.getMatches({y: +move.y - 1, x: +move.x}, "N");
-            break;
           case "S":
             return 1 + this.getMatches({y: +move.y + 1, x: +move.x}, "S");
-            break;
           case "E":
             return 1 + this.getMatches({y: +move.y, x: +move.x + 1}, "E");
-            break;
           case "W":
             return 1 + this.getMatches({y: +move.y, x: +move.x - 1}, "W");
-            break;
           case "NE":
             return 1 + this.getMatches({y: +move.y - 1, x: +move.x + 1}, "NE");
-            break;
           case "SE":
             return 1 + this.getMatches({y: +move.y + 1, x: +move.x + 1}, "SE");
-            break;
           case "NW":
             return 1 + this.getMatches({y: +move.y - 1, x: +move.x - 1}, "NW");
-            break;
           case "SW":
             return 1 + this.getMatches({y: +move.y + 1, x: +move.x - 1}, "SW");
-            break;
         }
       },
       resetBoard: function(boardSize, nInARow){ // resets the game
@@ -183,7 +198,106 @@ var tictactoe = {
   }
 };
 
-// var g = tictactoe.game(3, 3);
-// g.addPlayer(tictactoe.player('p1', 'x'));
-// g.addPlayer(tictactoe.player('p2', 'o'));
-// g.play();
+function GameState(player, board){
+  this.moves = [];
+  this.player = player; // player to move
+  this.board = board; //
+};
+var counter = 0;
+// make a move for every empty square and invoke it again for the newly generated gamestate
+GameState.prototype.generateMoves = function(gameState){
+  // make a gamestate consisting of the current player, the pieces on the board with the new move and a list of child gamestates
+  // debugger;
+  for (var y=0; y < gameState.board.length; y++){
+    for (var x=0; x < gameState.board[y].length; x++){
+      if (!!gameState.board[y][x]) { continue; } // square has been played
+      var nextBoard = JSON.parse(JSON.stringify(gameState.board)); // deep copy board
+      nextBoard[y][x] = gameState.player;
+      var nextPlayer;
+      if (gameState.player === 'x'){
+        nextPlayer = 'o';
+      } else {
+        nextPlayer = 'x';
+      }
+      var gameStateChild = new GameState(nextPlayer, nextBoard);
+      gameStateChild.x = x;
+      gameStateChild.y = y;
+      gameState.moves.push(gameStateChild);
+      counter++;
+      gameState.generateMoves(gameStateChild);
+    }
+  }
+}
+
+GameState.prototype.generateScores = function(gameState){
+  // debugger
+  if (gameState.board[0][0] === 'x' &&
+      gameState.board[0][1] === 'o' &&
+      gameState.board[0][2] === null &&
+      gameState.board[1][0] === 'x' &&
+      gameState.board[1][1] === 'x' &&
+      gameState.board[1][2] === null &&
+      gameState.board[2][0] === 'o' &&
+      gameState.board[2][1] === null &&
+      gameState.board[2][2] === 'o'
+    ){
+      console.log('gameState', gameState);
+      // debugger
+    }
+  // if (!gameState.moves.length){
+    // return gameState.getScore(gameState);
+  // }
+
+  var finalScore = gameState.getScore(gameState);
+  if (Number.isInteger(finalScore)){ // leaf game state
+    gameState.score = finalScore;
+    return finalScore;
+  }
+  var scores = [];
+  gameState.moves.forEach(function(gameState){
+    var res = gameState.generateScores(gameState);
+    if (Number.isInteger(res)){
+      scores.push(res);
+    }
+  });
+
+  if (scores.length){
+    if (gameState.player === 'x') {
+      gameState.score = Math.max.apply(null, scores);
+    } else {
+      gameState.score = Math.min.apply(null, scores);
+    }
+    return gameState.score;
+  }
+
+};
+
+GameState.prototype.getScore = function(gameState){
+  // var moves = [{ x: 0, y: 0}, { x: 1, y: 1 }, { x: 2, y: 2}];
+  var lastMove = { x: gameState.x, y: gameState.y };
+  var lastPlayer = gameState.player === 'x' ? 'o' : 'x';
+
+  g.board.grid = gameState.board;
+  g.curPlayer.piece = lastPlayer;
+  // for (var i=0; i < moves.length; i++){
+    var finalState = g.finalState(lastMove);
+
+    if (finalState === g.WINNER && lastPlayer === 'x') {
+      return 1;
+    }else if (finalState === g.WINNER && lastPlayer === 'o') {
+      return -1;
+    }else if (finalState === g.DRAW){
+      return 0;
+    }else { // no winner/draw yet
+      return null;
+    }
+  // }
+
+}
+
+var g = tictactoe.game(3, 3);
+g.addPlayer(tictactoe.player('p1', 'x'));
+g.addPlayer(tictactoe.player('p2', 'o'));
+
+
+g.play();
