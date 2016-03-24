@@ -47,31 +47,48 @@ var webGui = {
   createGame: function(boardSize, nInARow){ // create a new game
     var g = tictactoe.game(boardSize, nInARow);
     g.play = function(){ // captures a player clicking a square, validates move, sets the piece on the board and checks game state
-      $(".col").on("click", function(){
-        var move = {
-          y: $(this).closest(".row").attr("y"),
-          x: $(this).attr("x")
-        };
-        if (g.makeMove(move)){
+      var playMove = function(move){
+        if (this.makeMove(move)){
           g.webBoard.setSquare(move, g.curPlayer.avatar || g.curPlayer.piece); // update web board
-          g.board.show();
-          var gameState = g.gameState(move);
-          if (gameState === g.PLAY){
-              g.curPlayer = g.getNextPlayer();
-              // switch the hand image pointing to the next players turn
-              $('#p1 .hand').toggle();
-              $('#p2 .hand').toggle();
+          this.board.show();
+          this.finalState(move);
+
+          if (this.state === this.PLAY){
+            this.curPlayer = this.getNextPlayer();
+            // switch the hand image pointing to the next players turn
+            $('#p1 .hand').toggle();
+            $('#p2 .hand').toggle();
           }else{
-            if (gameState === g.WINNER){
+            if (this.state === this.WINNER){
+              console.log(this.curPlayer.name + " has won");
               $('#element_to_pop_up').html(g.curPlayer.name + " has won!").bPopup({modalColor: 'none'});
               var otherPlayer = g.getNextPlayer();
               $("#score").text(g.players[0].score + " : " + g.players[1].score);
             }else{
+              console.log("DRAW");
               $('#element_to_pop_up').html("It's a draw :(").bPopup({modalColor: 'none'});
             }
             $('.col').off('click'); // disable user input because game is over
           }
+          return true;
         }
+        return false;
+      }.bind(this);
+      var move = this.curPlayer.getMove(); // assume player X is AI
+      playMove(move);
+
+      $(".col").on("click", function(){
+        if (g.curPlayer.piece === 'x') { return; }
+        var move = {
+          y: $(this).closest(".row").attr("y"),
+          x: $(this).attr("x")
+        };
+        if (!playMove(move)) {
+          return;
+        }
+
+        var move = g.curPlayer.getMove(); // assume player X is AI
+        playMove(move);
       });
     };
     g.webBoard = webGui.board(boardSize); // creates a new web board
@@ -85,7 +102,7 @@ var webGui = {
     var p1AvatarUrl = $('#player1Avatar').val();
     var p2AvatarUrl = $('#player2Avatar').val();
 
-    var p1 = tictactoe.player(p1Name, 'x');
+    var p1 = tictactoe.player(p1Name, 'x', true);
     var p2 = tictactoe.player(p2Name, 'o');
     if (p1AvatarUrl){
       p1.avatar = '<img src="' + p1AvatarUrl + '"/>';
