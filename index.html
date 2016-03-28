@@ -34,12 +34,15 @@
 
 <script id="startMenuTemplate" type="text/template">
   <form class="menu">
-    <p><label for="gridSize">Grid size</label><input id="gridSize" type="number" value="3"/></p>
-    <p><label for="nInARow">N-in-a-row</label><input id="nInARow" type="number" value="3"/></p>
-    <p><label for="player1Name">Player 1 name</label><input id="player1Name" type="text" placeholder="Player 1"/></p>
-    <p><label for="player1Avatar">Player 1 avatar URL</label><input id="player1Avatar" type="text" placeholder="X"/></p>
-    <p><label for="player2Name">Player 2 name</label><input id="player2Name" type="text" placeholder="Player 2"/></p>
-    <p><label for="player2Avatar">Player 2 avatar URL</label><input id="player2Avatar" type="text" placeholder="O"/></p>
+    <p><label class="menuLabel" for="gridSize">Grid size</label><input id="gridSize" type="number" value="3"/></p>
+    <p><label class="menuLabel" for="nInARow">N-in-a-row</label><input id="nInARow" type="number" value="3"/></p>
+    <p><label class="menuLabel" for="player1Name">Player 1 name</label><input id="player1Name" type="text" placeholder="Player 1"/></p>
+    <p><label class="menuLabel" for="player1Avatar">Player 1 avatar URL</label><input id="player1Avatar" type="text" placeholder="X"/></p>
+    <p><label class="menuLabel" for="player2Name">Player 2 name</label><input id="player2Name" type="text" placeholder="Player 2"/></p>
+    <p><label class="menuLabel" for="player2Avatar">Player 2 avatar URL</label><input id="player2Avatar" type="text" placeholder="O"/></p>
+    <p><label class="menuLabel">AI</label>
+      <label class="aiLabel">Player 1<input class="aiCheckbox" name="1" type="checkbox"/></label>
+      <label class="aiLabel">Player 2<input class="aiCheckbox" name="2" type="checkbox"/></label></p>
     <button id="newGame">New game</button>
   </form>
 </script>
@@ -55,12 +58,15 @@
 
 <script id="resetGameMenuTemplate" type="text/template">
   <form>
-    <p><label for="gridSize">Grid size</label><input id="gridSize" type="number" value="3"/></p>
-    <p><label for="nInARow">N-in-a-row</label><input id="nInARow" type="number" value="3"/></p>
-    <p><label for="player1Name">Player 1 name</label><input id="player1Name" type="text" placeholder="Player 1"/></p>
-    <p><label for="player1Avatar">Player 1 avatar URL</label><input id="player1Avatar" type="text" placeholder="X"/></p>
-    <p><label for="player2Name">Player 2 name</label><input id="player2Name" type="text" placeholder="Player 2"/></p>
-    <p><label for="player2Avatar">Player 2 avatar URL</label><input id="player2Avatar" type="text" placeholder="O"/></p>
+    <p><label class="menuLabel" for="gridSize">Grid size</label><input id="gridSize" type="number" value="3"/></p>
+    <p><label class="menuLabel" for="nInARow">N-in-a-row</label><input id="nInARow" type="number" value="3"/></p>
+    <p><label class="menuLabel" for="player1Name">Player 1 name</label><input id="player1Name" type="text" placeholder="Player 1"/></p>
+    <p><label class="menuLabel" for="player1Avatar">Player 1 avatar URL</label><input id="player1Avatar" type="text" placeholder="X"/></p>
+    <p><label class="menuLabel" for="player2Name">Player 2 name</label><input id="player2Name" type="text" placeholder="Player 2"/></p>
+    <p><label class="menuLabel" for="player2Avatar">Player 2 avatar URL</label><input id="player2Avatar" type="text" placeholder="O"/></p>
+    <p><label class="menuLabel">AI</label>
+      <label class="aiLabel">Player 1<input class="aiCheckbox" name="1" type="checkbox"/></label>
+      <label class="aiLabel">Player 2<input class="aiCheckbox" name="2" type="checkbox"/></label></p>
     <button id="resetGame">Reset game</button>
   </form>
 </script>

@@ -146,3 +146,11 @@ form {
   width: 65%;
   margin: 1vh auto;
 }
+
+.aiLabel {
+  margin-right: 1em;
+}
+
+input[type='checkbox'] {
+  margin-left: 0.5em;
+}

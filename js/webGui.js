@@ -85,8 +85,10 @@ var webGui = {
     var p1AvatarUrl = $('#player1Avatar').val();
     var p2AvatarUrl = $('#player2Avatar').val();
 
-    var p1 = new tictactoe.Player(p1Name);
-    var p2 = new tictactoe.Player(p2Name);
+    var p1EnableAI = $('.aiCheckbox:checked').prop('name') === '1';
+    var p2EnableAI = $('.aiCheckbox:checked').prop('name') === '2';
+    var p1 = new tictactoe.Player(p1Name, p1EnableAI);
+    var p2 = new tictactoe.Player(p2Name, p2EnableAI);
     if (p1AvatarUrl){
       p1.avatar = '<img src="' + p1AvatarUrl + '"/>';
       $('#playerBar #p1 .pic').html(p1.avatar);
@@ -113,13 +115,13 @@ var webGui = {
   },
   alignForm: function($form){ // adjusts the form so that input boxes are horizontally aligned. '$form' must already be in the DOM
       var max = 0;
-      $($form).find('label').each(function(){
+      $($form).find('.menuLabel').each(function(){
         if ($(this).width() > max){
           max = $(this).width();
         }
       });
-      $($form).find('label').css("display", "inline-block");
-      $($form).find('label').width(max);
+      $($form).find('.menuLabel').css("display", "inline-block");
+      $($form).find('.menuLabel').width(max);
   }
 };
 
@@ -153,5 +155,10 @@ $(document).ready(function(){
         popup = $('#element_to_pop_up').html($resetGameMenu).bPopup({modalColor: 'none'});
         webGui.alignForm($resetGameMenu);
       }
+    });
+
+    $('body').on('change', '.aiCheckbox', function(e){
+      // untick other player AI checkbox if it's ticked because we can only have 1 AI player
+      $('.aiCheckbox').not(this).prop('checked', false);
     });
 });
