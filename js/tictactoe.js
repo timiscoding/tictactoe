@@ -332,7 +332,7 @@ var tictactoe = (function(exports) {
 // play a game in console
 // (function main() {
 //   var game = new tictactoe.Game(3,3);
-//   game.addPlayer(new tictactoe.Player('p1'));
+//   game.addPlayer(new tictactoe.Player('p1',true));
 //   game.addPlayer(new tictactoe.Player('p2'));
 //   do {
 //     var res = game.play();
