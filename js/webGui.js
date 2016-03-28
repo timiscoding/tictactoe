@@ -45,23 +45,23 @@ var webGui = {
     };
   },
   createGame: function(boardSize, nInARow){ // create a new game
-    var g = tictactoe.game(boardSize, nInARow);
-    g.play = function(){ // captures a player clicking a square, validates move, sets the piece on the board and checks game state
+    var g = new tictactoe.Game(boardSize, nInARow);
+    g.play = function(){ // captures a player clicking a square, validates move, sets the piece on the board and checks if game is over
       var playMove = function(move){
         if (this.makeMove(move)){
           g.webBoard.setSquare(move, g.curPlayer.avatar || g.curPlayer.piece); // update web board
           this.board.show();
-          this.finalState(move);
-
-          if (this.state === this.PLAY){
+          this.state = tictactoe.finalState(move, g.board);
+          if (this.state === tictactoe.PLAY){
             this.curPlayer = this.getNextPlayer();
             // switch the hand image pointing to the next players turn
             $('#p1 .hand').toggle();
             $('#p2 .hand').toggle();
           }else{
-            if (this.state === this.WINNER){
+            if (this.state === tictactoe.WINNER){
               console.log(this.curPlayer.name + " has won");
               $('#element_to_pop_up').html(g.curPlayer.name + " has won!").bPopup({modalColor: 'none'});
+              g.curPlayer.score++;
               var otherPlayer = g.getNextPlayer();
               $("#score").text(g.players[0].score + " : " + g.players[1].score);
             }else{
@@ -74,21 +74,25 @@ var webGui = {
         }
         return false;
       }.bind(this);
-      var move = this.curPlayer.getMove(); // assume player X is AI
-      playMove(move);
+      if (this.curPlayer.ai){ // get AI to move if they are first player
+        var move = this.curPlayer.getMove();
+        playMove(move);
+      }
 
       $(".col").on("click", function(){
-        if (g.curPlayer.piece === 'x') { return; }
+        if (g.curPlayer.ai) { return; }
         var move = {
           y: $(this).closest(".row").attr("y"),
-          x: $(this).attr("x")
+          x: $(this).attr("x"),
+          piece: g.curPlayer.piece
         };
-        if (!playMove(move)) {
+        if (!playMove(move)) { // human player made invalid move. eg. clicking on a square already clicked.
           return;
         }
-
-        var move = g.curPlayer.getMove(); // assume player X is AI
-        playMove(move);
+        if (g.state === tictactoe.PLAY && g.curPlayer.ai){ // if next player is AI, get them to move
+          var move = g.curPlayer.getMove();
+          playMove(move);
+        }
       });
     };
     g.webBoard = webGui.board(boardSize); // creates a new web board
@@ -102,8 +106,8 @@ var webGui = {
     var p1AvatarUrl = $('#player1Avatar').val();
     var p2AvatarUrl = $('#player2Avatar').val();
 
-    var p1 = tictactoe.player(p1Name, 'x', true);
-    var p2 = tictactoe.player(p2Name, 'o');
+    var p1 = new tictactoe.Player(p1Name,true);
+    var p2 = new tictactoe.Player(p2Name);
     if (p1AvatarUrl){
       p1.avatar = '<img src="' + p1AvatarUrl + '"/>';
       $('#playerBar #p1 .pic').html(p1.avatar);
@@ -156,6 +160,7 @@ $(document).ready(function(){
         $(webGui.formGenerator(['g', 'niar', 'ng', 's'], false)).appendTo('#options');
         $('form').css({"width": "65%",
                       "margin": "1vh auto"});
+        game.play();
       }else if ($button.attr('id') === "newGame"){ // resets board, but not player info and scores
         var gridSize = $('#gridSize').val() || 3;
         var nInARow = $('#nInARow').val() || 3;
@@ -163,14 +168,15 @@ $(document).ready(function(){
         game.webBoard = webGui.board(gridSize); // reset dom board
         $('#p1 .hand').show();
         $('#p2 .hand').hide();
+        game.play();
       }else if ($button.attr('id') === "resetGame"){ // resets everything including player info and scores
         game = webGui.resetGame();
         popup.close();
+        game.play();
       }else if ($button.attr('id') === "settings"){ // shows settings popup
         var $form = $(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'rg'], true));
         popup = $('#element_to_pop_up').html($form).bPopup({modalColor: 'none'});
         webGui.alignForm($form);
       }
-      game.play();
     });
 });
