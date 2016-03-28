@@ -1,27 +1,6 @@
 console.log("webGui");
 
 var webGui = {
-  formGenerator: function(settings, newLine){ // generates a form in html based on an array specifying the order and elements needed. 'newLine' creates <p> tags on each element
-    var g = '<label for="gridSize">Grid size</label><input id="gridSize" type="number" value="3"/>';
-    var niar = '<label for="nInARow">N-in-a-row</label><input id="nInARow" type="number" value="3"/>';
-    var p1n = '<label for="player1Name">Player 1 name</label><input id="player1Name" type="text" placeholder="Player 1"/>';
-    var p1a = '<label for="player1Avatar">Player 1 avatar URL</label><input id="player1Avatar" type="text" placeholder="X"/>';
-    var p2n = '<label for="player2Name">Player 2 name</label><input id="player2Name" type="text" placeholder="Player 2"/>';
-    var p2a = '<label for="player2Avatar">Player 2 avatar URL</label><input id="player2Avatar" type="text" placeholder="O"/>';
-    var ng = '<button id="newGame">New game</button>';
-    var rg = '<button id="resetGame">Reset game</button>';
-    var s = '<button id="settings">settings</button>';
-    var str = "<form>\n";
-    for (var i=0; i < settings.length; i++){
-      var element = settings[i];
-      if (newLine && element !== 'ng' && element !== 'rg'){
-        str += "<p>" + eval(element) + '</p>\n';
-      }else{
-        str += eval(settings[i]) + '\n';
-      }
-    }
-    return str + '</form>';
-  },
   board: function(size){ // create a board on the web page. returns an object allowing you to set a square
     // remove any previous board
     $(".row").remove();
@@ -106,7 +85,7 @@ var webGui = {
     var p1AvatarUrl = $('#player1Avatar').val();
     var p2AvatarUrl = $('#player2Avatar').val();
 
-    var p1 = new tictactoe.Player(p1Name,true);
+    var p1 = new tictactoe.Player(p1Name);
     var p2 = new tictactoe.Player(p2Name);
     if (p1AvatarUrl){
       p1.avatar = '<img src="' + p1AvatarUrl + '"/>';
@@ -147,9 +126,7 @@ var webGui = {
 $(document).ready(function(){
     var game = null;
     var popup = null;
-    var $startScreen = $(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'ng'], true)).appendTo('#container');
-    $startScreen.css({"width": "70%",
-                      "margin": "0 auto"});
+    var $startScreen = $( $('#startMenuTemplate').html() ).appendTo('#container');
     webGui.alignForm($startScreen);
     $('body').on('click', 'button', function(event){
       event.preventDefault();
@@ -157,9 +134,7 @@ $(document).ready(function(){
       if (!game){ // first game
         game = webGui.resetGame();
         $startScreen.remove();
-        $(webGui.formGenerator(['g', 'niar', 'ng', 's'], false)).appendTo('#options');
-        $('form').css({"width": "65%",
-                      "margin": "1vh auto"});
+        $('#options').append( $('#gameMenuTemplate').html() );
         game.play();
       }else if ($button.attr('id') === "newGame"){ // resets board, but not player info and scores
         var gridSize = $('#gridSize').val() || 3;
@@ -174,9 +149,9 @@ $(document).ready(function(){
         popup.close();
         game.play();
       }else if ($button.attr('id') === "settings"){ // shows settings popup
-        var $form = $(webGui.formGenerator(['g', 'niar', 'p1n', 'p1a', 'p2n', 'p2a', 'rg'], true));
-        popup = $('#element_to_pop_up').html($form).bPopup({modalColor: 'none'});
-        webGui.alignForm($form);
+        var $resetGameMenu = $( $('#resetGameMenuTemplate').html() );
+        popup = $('#element_to_pop_up').html($resetGameMenu).bPopup({modalColor: 'none'});
+        webGui.alignForm($resetGameMenu);
       }
     });
 });
